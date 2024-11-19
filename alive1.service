@@ -1,0 +1,15 @@
+[Unit]
+Description=Python AliveOne Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u ./alive1.py
+WorkingDirectory=/home/pya-h/pydea.rs/ansible/service/
+Restart=always
+User=pya-h
+StandardOutput=append:/home/pya-h/pydea.rs/ansible/service/alive1.out.log
+StandardError=append:/home/pya-h/pydea.rs/ansible/service/alive1.err.log
+
+[Install]
+WantedBy=multi-user.target

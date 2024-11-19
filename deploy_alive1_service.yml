@@ -1,0 +1,47 @@
+---
+- name: Deploy alive1 Python service
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Ensure /home/pya-h/pydea.rs/ansible directory exists
+      file:
+        path: /home/pya-h/pydea.rs/ansible
+        state: directory
+        owner: pya-h
+        group: pya-h
+        mode: '0755'
+
+    - name: Clone the private Git repository
+      git:
+        repo: "git@github.com:pydea-rs/alive1-ansile.git"
+        dest: /home/pya-h/pydea.rs/ansible/service
+        version: master
+        force: yes
+        accept_hostkey: yes
+      environment:
+        GIT_SSH_COMMAND: "ssh -i /home/pya-h/pydea.rs/ansible/pydeakey"
+        GIT_AUTHOR_NAME: "pydea-rs"
+        GIT_AUTHOR_EMAIL: "pydea.h@gmail.com"
+        GIT_COMMITTER_NAME: "pydea-rs"
+        GIT_COMMITTER_EMAIL: "pydea.h@gmail.com"
+
+    - name: Copy the service file to /etc/systemd/system
+      copy:
+        src: /home/pya-h/pydea.rs/ansible/service/alive1.service
+        dest: /etc/systemd/system/alive1.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd to apply the new service file
+      command: systemctl daemon-reload
+
+    - name: Enable the alive1 service to start on boot
+      systemd:
+        name: alive1.service
+        enabled: true
+
+    - name: Start the alive1 service
+      systemd:
+        name: alive1.service
+        state: started
