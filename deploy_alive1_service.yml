@@ -13,7 +13,7 @@
 
     - name: Clone the private Git repository
       git:
-        repo: "git@github.com:pydea-rs/alive1-ansile.git"
+        repo: "git@github.com:pydea-rs/alive1-ansible.git"
         dest: /home/pya-h/pydea.rs/ansible/service
         version: master
         force: yes
